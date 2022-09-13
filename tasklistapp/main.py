@@ -9,6 +9,28 @@ def banner():
   print('TaskListApp'.center(30))
   print('='.ljust(29,'='))
 
+def main_menu(user):
+  print('Welcome ' + str(user))
+  print('\n1. View current Tasks\n2. Create new task\n3. Modify existing tasks\n4. Delete task(s)\n5. Logout\n6. Exit program')
+
+def validate_text_input(input):
+  input = input.strip().lower()
+  if input == 'y':
+    return 'y'
+  elif input == 'n':
+    return 'n'
+  else:
+    return 'invalid'
+
+def validate_num_input(input, range):
+  input = input.strip()
+  try:
+    input = int(input)
+    if range[0] <= input <= range[1]:
+      return input
+  except:
+    return 'invalid'
+
 def clear_screen():
   #os.system('cls') -> Windows
   #os.system('clear') -> linux/macos
@@ -41,6 +63,8 @@ def delete_task(user):
     temporarydb.task_db[user] = b
   except:
     print('An error occured, please try again')
+
+    
 #rewriting main loop
 
 main_loop = True
@@ -72,7 +96,27 @@ while main_loop == True:
 
   while login_state == True:
     banner()
-    print('Welcome ' + str(current_user))
-    break
+    main_menu(current_user)
+    ask_input = input('Your choice? (1-5): ')
+    ask_input = validate_num_input(ask_input, [0,6])
+    
+    if ask_input == 1:
+      print('1')
+    elif ask_input == 2:
+      print('2')
+    elif ask_input == 3:
+      print('3')
+    elif ask_input == 4:
+      print('4')
+    elif ask_input == 5:    
+      
+      login_state = False
+      login_counter = 5
+      current_user = None
+    elif ask_input == 6:
+      main_loop = False
+      print('6')
+    else:
+      print('An error occured, please try again.')
   
-  break
+  # break
