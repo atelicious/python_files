@@ -1,7 +1,8 @@
 #this will be the main for tasklistapp
 
-import login_api, temporarydb, os
+import login_api, temporarydb, os, db_functions
 from time import sleep
+from user import User
 
 #initial main menu for the app
 def banner():
@@ -37,9 +38,19 @@ def clear_screen():
   os.system('clear')
 
 def get_tasks(user):
-  current_tasks = temporarydb.task_db[user]
-  for tasks in current_tasks:
-    print(tasks + '\n')
+  current_tasks = db_functions.get_user_username(user)[4]
+  if current_tasks == '':
+    print('There are no current tasks for you today')
+  else:
+    count = 0
+    modified_tasks = current_tasks.split('***')
+    if len(modified_tasks) > 1:
+      print('These are your tasks for today: \n')
+    else:
+      print('This is your tasks for today: \n')
+    for tasks in modified_tasks:
+      print(f'{count + 1}. {tasks.title()}')
+      count += 1
 
 def add_tasks(user):
   new_task = input('Add your new task here: ')
@@ -101,22 +112,45 @@ while main_loop == True:
     ask_input = validate_num_input(ask_input, [0,6])
     
     if ask_input == 1:
+      #view user tasks
       print('1')
-    elif ask_input == 2:
-      print('2')
-    elif ask_input == 3:
-      print('3')
-    elif ask_input == 4:
-      print('4')
-    elif ask_input == 5:    
+      get_tasks(current_user)
       
-      login_state = False
-      login_counter = 5
-      current_user = None
+    elif ask_input == 2:
+      #add user tasks
+      print('2')
+      
+    elif ask_input == 3:
+      #modifying existing tasks
+      print('3')
+
+    elif ask_input == 4:
+      #delete tasks
+      print('4')
+
+    elif ask_input == 5:   
+      #logout user
+      confirm_input = input('Do you want to log out? (y/n): ')
+      confirm_input = validate_text_input(confirm_input)
+      if confirm_input == 'y':
+        login_state = False
+        login_counter = 5
+        current_user = None
+        clear_screen()
+      elif confirm_input == 'n':
+        clear_screen()
+        continue
+      else:
+        print('invalid input, please try again')
+        continue
+        
     elif ask_input == 6:
+      #exit program
       main_loop = False
       print('6')
+      
     else:
+      #wrong input
       print('An error occured, please try again.')
   
   # break
