@@ -18,4 +18,7 @@ def login():
     
     if request.method == 'POST':
         return "POST method received"
-    
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
